@@ -1,11 +1,11 @@
-const API_URL = "http://localhost:9000/api";
+const API_URL = "https://backend-pokemon-wv6b.onrender.com/api";
 
 const formPokemon = document.getElementById("formPokemon");
 const tablaPokemon = document.getElementById("tablaPokemon");
 const editarModal = new bootstrap.Modal(document.getElementById("modalEditar"));
 const eliminarModal = new bootstrap.Modal(document.getElementById("modalEliminar"));
 
-// ✅ NUEVO MODAL ERROR
+// NUEVO MODAL ERROR
 const modalError = new bootstrap.Modal(document.getElementById("modalError"));
 const mensajeError = document.getElementById("mensajeError");
 
