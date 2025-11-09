@@ -1,0 +1,8 @@
+### Obtener todos los Pokémon
+GET https://backend-pokemon-wv6b.onrender.com/api
+Accept: application/json
+
+
+### Obtener Pokémon filtrado por nombre del entrenador
+GET https://backend-pokemon-wv6b.onrender.com/api?entrenador=Eduardo
+Accept: application/json

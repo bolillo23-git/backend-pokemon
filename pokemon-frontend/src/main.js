@@ -23,6 +23,9 @@ const tipoInput = document.getElementById("tipo");
 const nivelInput = document.getElementById("nivel");
 const entrenadorInput = document.getElementById("entrenador");
 
+// 🔎 NUEVO → input para filtro
+const filtroInput = document.getElementById("filtro");
+
 // === LISTA DE POKÉMON BÁSICA ===
 const pokemons = [
   { nombre: "Pikachu", tipo: "Eléctrico", imagen: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" },
@@ -90,7 +93,7 @@ formPokemon.addEventListener("submit", async e => {
       body: JSON.stringify(nuevoPokemon)
     });
 
-    const data = await res.json(); // capturar mensaje del backend
+    const data = await res.json();
 
     if (!res.ok) {
       mensajeError.textContent = data.message || "Hubo un error al agregar el Pokémon";
@@ -108,10 +111,14 @@ formPokemon.addEventListener("submit", async e => {
   }
 });
 
-// === CARGAR TABLA ===
-async function renderEquipo() {
+//CARGAR TABLA
+async function renderEquipo(entrenador = "") {
   try {
-    const res = await fetch(`${API_URL}`);
+    const url = entrenador
+      ? `${API_URL}?entrenador=${entrenador}`
+      : `${API_URL}`;
+
+    const res = await fetch(url);
     const data = await res.json();
 
     tablaPokemon.innerHTML = "";
@@ -131,10 +138,25 @@ async function renderEquipo() {
       `;
       tablaPokemon.appendChild(fila);
     });
+
   } catch (err) {
     console.error("Error al obtener los equipos:", err);
   }
 }
+
+//FILTRO POR ENTRENADOR 
+filtroInput.addEventListener("input", () => {
+  const valor = filtroInput.value.trim();
+  renderEquipo(valor);
+});
+
+
+filtroInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    renderEquipo(filtroInput.value.trim());
+  }
+});
 
 // === EDITAR ===
 tablaPokemon.addEventListener("click", async e => {
