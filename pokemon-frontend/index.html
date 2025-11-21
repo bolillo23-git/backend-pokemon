@@ -11,7 +11,7 @@
 <body class="bg-light">
 
   <div class="container mt-5">
-    <form id="formPokemon">
+    <form id="formPokemon" class="needs-validation" novalidate>
       <div class="card">
       <div class="card-body">
         <div class="card-title">
@@ -27,27 +27,37 @@
           </div>
         </div>
         <div class="row">
+
+            <!-- ENTRENADOR -->
             <div class="col-12 col-md-3">
               <div class="mb-3">
                 <label for="entrenador" class="form-label">Nombre del Entrenador</label>
                 <input type="text" id="entrenador" class="form-control" placeholder="Ej. Ash Ketchum" required>
-                </div>
+                <div class="invalid-feedback">Ingresa el nombre del entrenador</div>
+              </div>
             </div>
+
+            <!-- SELECT POKEMON -->
             <div class="col-12 col-md-3">
               <label for="nombre" class="form-label">Pokémon</label>
               <select id="nombre" class="form-select" required>
                 <option value="">Selecciona un Pokémon</option>
               </select>
+              <div class="invalid-feedback">Selecciona un Pokémon</div>
             </div>
 
+            <!-- TIPO -->
             <div class="col-12 col-md-3">
               <label for="tipo" class="form-label">Tipo</label>
               <input type="text" id="tipo" class="form-control" readonly />
+              <!-- no requiere invalid-feedback porque no es editable -->
             </div>
 
+            <!-- NIVEL -->
             <div class="col-12 col-md-3">
               <label for="nivel" class="form-label">Nivel</label>
               <input type="number" id="nivel" class="form-control" min="1" max="100" placeholder="Ej. 20" required />
+              <div class="invalid-feedback">Ingresa un nivel válido (1-100)</div>
             </div>
 
           </div>
@@ -72,6 +82,7 @@
            <div class="col-12 col-md-6">
             <input type="text" class="form-control mt-2" id="filtro" name="filtro" 
             placeholder="Nombre" required>
+            <div class="invalid-feedback">Escribe un nombre para filtrar</div>
            </div>
         </div>
 
@@ -79,9 +90,8 @@
     </div>
   </div>
 
-
-    <!-- TABLA EQUIPO -->
-    <div class="row mt-3">
+  <!-- TABLA EQUIPO -->
+  <div class="row mt-3">
       <div class="col text-center">
         <h4 class="mb-3">Equipo Pokemon</h4>
       </div>
@@ -105,9 +115,7 @@
       </div>
     </div>
 
-  
-
-  <!--modal editat -->
+  <!-- MODAL EDITAR -->
   <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg"> 
       <div class="modal-content">
@@ -118,7 +126,7 @@
         </div>
 
         <div class="modal-body">
-          <form id="formEditar">
+          <form id="formEditar" novalidate>
 
             <input type="hidden" id="editarId">
 
@@ -126,11 +134,13 @@
               <div class="col-md-6">
                 <label for="editarNombre" class="form-label">Pokémon</label>
                 <select id="editarNombre" class="form-select" required></select>
+                <div class="invalid-feedback">Selecciona un Pokémon</div>
               </div>
 
               <div class="col-md-6">
                 <label for="editarNivel" class="form-label">Nivel</label>
                 <input type="number" id="editarNivel" class="form-control" min="1" max="100" required />
+                <div class="invalid-feedback">Ingresa un nivel válido</div>
               </div>
 
               <div class="col-md-6">
@@ -155,7 +165,7 @@
     </div>
   </div>
 
-  <!--modal eliminar -->
+  <!-- MODAL ELIMINAR -->
   <div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -177,27 +187,28 @@
       </div>
     </div>
   </div>
-   <!-- modal error -->
-<div class="modal fade" id="modalError" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
 
-      <div class="modal-header bg-danger text-white">
-        <h5 class="modal-title">Error</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+  <!-- MODAL ERROR -->
+  <div class="modal fade" id="modalError" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title">Error</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <p id="mensajeError"></p>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+
       </div>
-
-      <div class="modal-body">
-        <p id="mensajeError"></p>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-
     </div>
   </div>
-</div>
 
   <script type="module" src="/src/main.js"></script>
 
