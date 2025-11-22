@@ -29,7 +29,7 @@ const entrenadorInput = document.getElementById("entrenador");
 const filtroInput = document.getElementById("filtro");
 
 // ==========================================
-// POKÉMON DISPONIBLES PARA SELECCIONAR
+// POKÉMON PARA LOS SELECTS
 // ==========================================
 const pokemons = [
     { nombre: "Pikachu", tipo: "Eléctrico", imagen: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" },
@@ -43,7 +43,7 @@ const pokemons = [
 ];
 
 // ==========================================
-// LLENAR SELECT DE POKÉMON
+// LLENAR SELECTS
 // ==========================================
 pokemons.forEach(p => {
     const option = document.createElement("option");
@@ -51,8 +51,8 @@ pokemons.forEach(p => {
     option.textContent = p.nombre;
     selectPokemon.appendChild(option);
 
-    const optionEdit = option.cloneNode(true);
-    editarNombre.appendChild(optionEdit);
+    const option2 = option.cloneNode(true);
+    editarNombre.appendChild(option2);
 });
 
 // Cambiar tipo automáticamente al seleccionar
@@ -61,7 +61,7 @@ selectPokemon.addEventListener("change", e => {
     tipoInput.value = seleccionado ? seleccionado.tipo : "";
 });
 
-// Cambiar campos al editar
+// Cambiar tipo / imagen en modal editar
 editarNombre.addEventListener("change", e => {
     const seleccionado = pokemons.find(p => p.nombre === e.target.value);
     editarTipo.value = seleccionado ? seleccionado.tipo : "";
@@ -69,7 +69,7 @@ editarNombre.addEventListener("change", e => {
 });
 
 // ==========================================
-// FUNCIÓN PARA RENDERIZAR TABLA
+// RENDERIZAR TABLA
 // ==========================================
 async function renderEquipo(entrenador = "") {
     try {
@@ -89,10 +89,10 @@ async function renderEquipo(entrenador = "") {
                 <td>${p.entrenador}</td>
                 <td>
                     <button class="btn btn-warning btn-sm" data-id="${p._id}" 
-                            data-bs-toggle="modal" data-bs-target="#modalEditar">Editar</button>
+                        data-bs-toggle="modal" data-bs-target="#modalEditar">Editar</button>
                     <button class="btn btn-danger btn-sm" data-id="${p._id}" 
-                            data-nombre="${p.nombre}"
-                            data-bs-toggle="modal" data-bs-target="#modalEliminar">Eliminar</button>
+                        data-nombre="${p.nombre}"
+                        data-bs-toggle="modal" data-bs-target="#modalEliminar">Eliminar</button>
                 </td>
             `;
             tablaPokemon.appendChild(fila);
@@ -104,17 +104,13 @@ async function renderEquipo(entrenador = "") {
 }
 
 // ==========================================
-// VALIDACIÓN + AGREGAR POKÉMON
+// VALIDAR Y CREAR POKÉMON
 // ==========================================
 formPokemon.addEventListener("submit", async e => {
     e.preventDefault();
 
-    // Activar validación Bootstrap
     formPokemon.classList.add("was-validated");
-
-    if (!formPokemon.checkValidity()) {
-        return;
-    }
+    if (!formPokemon.checkValidity()) return;
 
     const nombre = selectPokemon.value;
     const tipo = tipoInput.value;
@@ -157,22 +153,21 @@ formPokemon.addEventListener("submit", async e => {
 });
 
 // ==========================================
-// VALIDACIÓN DEL FILTRO
+// FILTRAR POR ENTRENADOR
 // ==========================================
 filtroInput.addEventListener("input", () => {
-    filtroInput.classList.add("was-validated");
-
     renderEquipo(filtroInput.value.trim());
 });
 
 // ==========================================
-// EDITAR Y ELIMINAR (DELEGACIÓN DE EVENTOS)
+// EDITAR Y ELIMINAR
 // ==========================================
 tablaPokemon.addEventListener("click", async e => {
 
     // ---- EDITAR ----
     if (e.target.classList.contains("btn-warning")) {
         const id = e.target.dataset.id;
+
         const res = await fetch(`${API_URL}/${id}`);
         const pokemon = await res.json();
 
@@ -197,6 +192,45 @@ tablaPokemon.addEventListener("click", async e => {
 });
 
 // ==========================================
+// GUARDAR CAMBIOS (PUT)
+// ==========================================
+document.getElementById("formEditar").addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const id = editarId.value;
+
+    const dataActualizada = {
+        nombre: editarNombre.value,
+        tipo: editarTipo.value,
+        nivel: parseInt(editarNivel.value),
+        imagen: editarImagen.value
+    };
+
+    try {
+        const res = await fetch(`${API_URL}/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dataActualizada)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            mensajeError.textContent = data.message;
+            modalError.show();
+            return;
+        }
+
+        editarModal.hide();
+        renderEquipo();
+
+    } catch (err) {
+        mensajeError.textContent = "No se pudo actualizar";
+        modalError.show();
+    }
+});
+
+// ==========================================
 // CONFIRMAR ELIMINACIÓN
 // ==========================================
 confirmarEliminar.addEventListener("click", async () => {
@@ -204,6 +238,7 @@ confirmarEliminar.addEventListener("click", async () => {
 
     try {
         await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+
         eliminarModal.hide();
         renderEquipo();
 
@@ -214,6 +249,6 @@ confirmarEliminar.addEventListener("click", async () => {
 });
 
 // ==========================================
-// CARGAR LA TABLA AL INICIO
+// CARGAR INICIO
 // ==========================================
 renderEquipo();
